@@ -1,0 +1,55 @@
+package md2bl;
+
+use strict;
+use Exporter 'import';
+
+my $EOL = '\n';
+if ($^O eq 'msys') {
+	$EOL = '\r\n';
+}
+
+sub md2bl {
+	my $line = shift;
+
+	# インデント（半角スペース4個）を変換
+	$line = indent2minus($line);
+
+	# 太字の記法を変換
+	$line = ast2sqt($line);
+
+	# 見出しの記法を変換
+	$line = hash2ast($line);
+
+	# 空白行を詰める
+	$line = delete_empty_line($line);
+
+	return $line;
+}
+
+sub indent2minus {
+	my $input = shift;
+	$input =~ s/\s{4}/-/g;
+	return $input;
+}
+
+sub ast2sqt {
+	my $input = shift;
+	$input =~ s/\*\*(.*)\*\*/''\1''/g;
+	return $input;
+}
+
+sub hash2ast {
+	my $input = shift;
+	$input =~ s/#/*/g;
+	return $input;
+}
+
+sub delete_empty_line {
+	my $input = shift;
+	if ($input !~ /^\s*${EOL}/) {
+		return $input;
+	} 
+	return;
+}
+
+1;
