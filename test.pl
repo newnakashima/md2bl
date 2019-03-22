@@ -44,5 +44,32 @@ sub testAst2sqt {
 	print("testAst2sqt succeeded!\n");
 }
 
+sub testHash2ast {
+	my @inputs = (
+		"# 見出しレベル1",
+		"## 見出しレベル2",
+		"### 見出しレベル3",
+		"# 文の途中に#があるやつ",
+	);
+	my @expected = (
+		"* 見出しレベル1",
+		"** 見出しレベル2",
+		"*** 見出しレベル3",
+		"* 文の途中に#があるやつ",
+	);
+	for (my $i = 0; $i < $#inputs+1; $i++) {
+		my $actual = md2bl::md2bl(@inputs[$i]);
+		if ($actual ne @expected[$i]) {
+			print("testHash2ast failed.\n");
+			print("actual: " . $actual . "\n");
+			print("expected: " . $expected[$i]. "\n");
+			exit();
+		}
+	}
+	print("testHash2ast succeeded!\n");
+}
+
 testIndent2minus();
 testAst2sqt();
+testHash2ast();
+

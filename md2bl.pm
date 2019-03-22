@@ -40,7 +40,11 @@ sub ast2sqt {
 
 sub hash2ast {
 	my $input = shift;
-	$input =~ s/#/*/g;
+	$input =~ /^(#+)\s/;
+	my $matched = $1;
+	my $asts = $matched;
+	$asts =~ s/#/*/g;
+	$input =~ s/${matched}/${asts}/;
 	return $input;
 }
 
