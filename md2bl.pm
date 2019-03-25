@@ -3,9 +3,12 @@ package md2bl;
 use strict;
 use Exporter 'import';
 
-my $EOL = '\n';
-if ($^O eq 'msys') {
-	$EOL = '\r\n';
+sub get_eol {
+	my $EOL = '\n';
+	if ($^O eq 'msys') {
+		$EOL = '\r\n';
+	}
+	return $EOL;
 }
 
 sub md2bl {
@@ -50,6 +53,7 @@ sub hash2ast {
 
 sub delete_empty_line {
 	my $input = shift;
+	my $EOL = get_eol();
 	if ($input !~ /^\s*${EOL}/) {
 		return $input;
 	} 

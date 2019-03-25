@@ -71,20 +71,25 @@ sub test_hash2ast {
 
 sub test_delete_empty_line {
 	my @inputs = (
-		"hoge\n\nhoge\n",
-		"hoge\n  \nhoge\n",
+		["hoge\n", "\n", "hoge\n"],
+		["hoge\n", "  \n", "hoge\n"],
 	);
 	my @expected = (
-		"hoge\nhoge\n",
-		"hoge\nhoge\n",
+		["hoge\n", "hoge\n"],
+		["hoge\n", "hoge\n"],
 	);
 	for (my $i = 0; $i < $#inputs+1; $i++) {
-		my $actual = md2bl::md2bl(@inputs[$i]);
-		if ($actual ne @expected[$i]) {
-			print("test_delete_empty_line failed.\n");
-			print("actual: " . $actual . "\n");
-			print("expected: " . $expected[$i]. "\n");
-			exit();
+		my @actual;
+		foreach my $item ($inputs[$i]) {
+			push(@actual, md2bl::md2bl($item));
+		}
+		for (my $j = 0; $j < $#expected+1; $j) {
+			if ($actual[$j] ne $expected[$i][$j]) {
+				print("test_delete_empty_line failed.\n");
+				print("actual: " . @actual[$j] . "\n");
+				print("expected: " . $expected[$i][$j] . "\n");
+				exit();
+			}
 		}
 	}
 	print("test_delete_empty_line succeeded!\n");
