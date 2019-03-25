@@ -2,7 +2,7 @@ use strict;
 use lib '.';
 use md2bl;
 
-sub testIndent2minus {
+sub test_indent2minus {
 	my @inputs = (
 		"- リストレベル1",
 		"    - リストレベル2",
@@ -16,16 +16,16 @@ sub testIndent2minus {
 	for (my $i = 0; $i < $#inputs+1; $i++) {
 		my $actual = md2bl::md2bl(@inputs[$i]);
 		if ($actual ne @expected[$i]) {
-			print("testIndent2minus failed.\n");
+			print("test_indent2minus failed.\n");
 			print("actual: " . $actual . "\n");
 			print("expected: " . @expected[$i] . "\n");
 			exit(1);
 		}
 	}
-	print("testIndent2minus succeeded!\n");
+	print("test_indent2minus succeeded!\n");
 }
 
-sub testAst2sqt {
+sub test_ast2sqt {
 	my @inputs = (
 		"**太字記法**",
 	);
@@ -35,16 +35,16 @@ sub testAst2sqt {
 	for (my $i = 0; $i < $#inputs+1; $i++) {
 		my $actual = md2bl::md2bl(@inputs[$i]);
 		if ($actual ne @expected[$i]) {
-			print("testAst2sqt failed.\n");
+			print("test_ast2sqt failed.\n");
 			print("actual: " . $actual . "\n");
 			print("expected: " . @expected[$i] . "\n");
 			exit(1);
 		}
 	}
-	print("testAst2sqt succeeded!\n");
+	print("test_ast2sqt succeeded!\n");
 }
 
-sub testHash2ast {
+sub test_hash2ast {
 	my @inputs = (
 		"# 見出しレベル1",
 		"## 見出しレベル2",
@@ -60,16 +60,39 @@ sub testHash2ast {
 	for (my $i = 0; $i < $#inputs+1; $i++) {
 		my $actual = md2bl::md2bl(@inputs[$i]);
 		if ($actual ne @expected[$i]) {
-			print("testHash2ast failed.\n");
+			print("test_hash2ast failed.\n");
 			print("actual: " . $actual . "\n");
 			print("expected: " . $expected[$i]. "\n");
 			exit();
 		}
 	}
-	print("testHash2ast succeeded!\n");
+	print("test_hash2ast succeeded!\n");
 }
 
-testIndent2minus();
-testAst2sqt();
-testHash2ast();
+sub test_delete_empty_line {
+	my @inputs = (
+		"hoge\n\nhoge\n",
+		"hoge\n  \nhoge\n",
+	);
+	my @expected = (
+		"hoge\nhoge\n",
+		"hoge\nhoge\n",
+	);
+	for (my $i = 0; $i < $#inputs+1; $i++) {
+		my $actual = md2bl::md2bl(@inputs[$i]);
+		if ($actual ne @expected[$i]) {
+			print("test_delete_empty_line failed.\n");
+			print("actual: " . $actual . "\n");
+			print("expected: " . $expected[$i]. "\n");
+			exit();
+		}
+	}
+	print("test_delete_empty_line succeeded!\n");
+
+}
+
+test_indent2minus();
+test_ast2sqt();
+test_hash2ast();
+test_delete_empty_line();
 
