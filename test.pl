@@ -2,6 +2,20 @@ use strict;
 use lib '.';
 use md2bl;
 
+sub exec_test {
+	my ($test_name, $inputs, $expected) = @_;
+    for (my $i = 0; $i < @$inputs; $i++) {
+        my $actual = md2bl::md2bl($inputs->[$i]);
+        if ($actual ne $expected->[$i]) {
+            print("$test_name failed.\n");
+            print("actual: $actual\n");
+            print("expected: $expected->[$i]\n");
+            exit(1);
+        }
+    }
+    print("$test_name succeeded!\n");
+}
+
 sub test_indent2minus {
 	my @inputs = (
 		"- リストレベル1",
@@ -13,16 +27,7 @@ sub test_indent2minus {
 		"-- リストレベル2",
 		"--- リストレベル3",
 	);
-	for (my $i = 0; $i < $#inputs+1; $i++) {
-		my $actual = md2bl::md2bl(@inputs[$i]);
-		if ($actual ne @expected[$i]) {
-			print("test_indent2minus failed.\n");
-			print("actual: " . $actual . "\n");
-			print("expected: " . @expected[$i] . "\n");
-			exit(1);
-		}
-	}
-	print("test_indent2minus succeeded!\n");
+    exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
 sub test_ast2sqt {
@@ -32,16 +37,7 @@ sub test_ast2sqt {
 	my @expected = (
 		"''太字記法''",
 	);
-	for (my $i = 0; $i < $#inputs+1; $i++) {
-		my $actual = md2bl::md2bl(@inputs[$i]);
-		if ($actual ne @expected[$i]) {
-			print("test_ast2sqt failed.\n");
-			print("actual: " . $actual . "\n");
-			print("expected: " . @expected[$i] . "\n");
-			exit(1);
-		}
-	}
-	print("test_ast2sqt succeeded!\n");
+    exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
 sub test_hash2ast {
@@ -57,19 +53,11 @@ sub test_hash2ast {
 		"*** 見出しレベル3",
 		"* 文の途中に#があるやつ",
 	);
-	for (my $i = 0; $i < $#inputs+1; $i++) {
-		my $actual = md2bl::md2bl(@inputs[$i]);
-		if ($actual ne @expected[$i]) {
-			print("test_hash2ast failed.\n");
-			print("actual: " . $actual . "\n");
-			print("expected: " . $expected[$i]. "\n");
-			exit(1);
-		}
-	}
-	print("test_hash2ast succeeded!\n");
+    exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
 sub test_delete_empty_line {
+    my $test_name = (caller(0))[3];
 	my $inputs = [
 		["hoge\n", "\n", "hoge\n"],
 		["hoge\n", "  \n", "hoge\n"],
@@ -89,19 +77,33 @@ sub test_delete_empty_line {
 		}
 		for (my $j = 0; $j < scalar(@$expected); $j++) {
             if (@actual[$j] ne $expected->[$i]->[$j]) {
-				print("test_delete_empty_line failed.\n");
+				print("$test_name failed.\n");
 				print("actual: " . @actual[$j] . "\n");
 				print("expected: " . $expected->[$i]->[$j] . "\n");
 				exit(1);
 			}
 		}
 	}
-	print("test_delete_empty_line succeeded!\n");
+	print("$test_name succeeded!\n");
+}
 
+sub test_link2link {
+    my @inputs = (
+        "このバグについては、このページ https://backlog.com/ja/ が参考になります。",
+        "このバグについては、このページ [[Backlog>https://backlog.com/ja/]] が参考になります。",
+		"このバグについては、このページ [[Backlog:https://backlog.com/ja/]] が参考になります。",
+    );
+	my @expected = (
+		"このバグについては、このページ https://backlog.com/ja/ が参考になります。",
+        "このバグについては、このページ [Backlog](https://backlog.com/ja/) が参考になります。",
+        "このバグについては、このページ [Backlog](https://backlog.com/ja/) が参考になります。",
+	);
+    exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
 test_indent2minus();
 test_ast2sqt();
 test_hash2ast();
 test_delete_empty_line();
+test_link2link();
 
