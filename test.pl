@@ -80,11 +80,15 @@ sub test_delete_empty_line {
 	];
 	for (my $i = 0; $i < scalar(@$inputs); $i++) {
 		my @actual = ();
-		foreach my $item ($inputs->[$i]) {
-			push(@actual, md2bl::md2bl(@$item));
+		foreach my $item (@{$inputs->[$i]}) {
+            my $result = md2bl::md2bl($item);
+            if ($result eq "") {
+                next;
+            }
+			push(@actual, md2bl::md2bl($item));
 		}
 		for (my $j = 0; $j < scalar(@$expected); $j++) {
-			if (@actual[$j] ne $expected->[$i]->[$j]) {
+            if (@actual[$j] ne $expected->[$i]->[$j]) {
 				print("test_delete_empty_line failed.\n");
 				print("actual: " . @actual[$j] . "\n");
 				print("expected: " . $expected->[$i]->[$j] . "\n");
