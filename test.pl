@@ -63,7 +63,7 @@ sub test_hash2ast {
 			print("test_hash2ast failed.\n");
 			print("actual: " . $actual . "\n");
 			print("expected: " . $expected[$i]. "\n");
-			exit();
+			exit(1);
 		}
 	}
 	print("test_hash2ast succeeded!\n");
@@ -92,7 +92,7 @@ sub test_delete_empty_line {
 				print("test_delete_empty_line failed.\n");
 				print("actual: " . @actual[$j] . "\n");
 				print("expected: " . $expected->[$i]->[$j] . "\n");
-				exit();
+				exit(1);
 			}
 		}
 	}
