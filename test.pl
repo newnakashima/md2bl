@@ -88,16 +88,14 @@ sub test_delete_empty_line {
 }
 
 sub test_link2link {
-    my @inputs = (
-        "このバグについては、このページ https://backlog.com/ja/ が参考になります。",
-        "このバグについては、このページ [[Backlog>https://backlog.com/ja/]] が参考になります。",
-		"このバグについては、このページ [[Backlog:https://backlog.com/ja/]] が参考になります。",
-    );
-	my @expected = (
+	my @inputs = (
 		"このバグについては、このページ https://backlog.com/ja/ が参考になります。",
         "このバグについては、このページ [Backlog](https://backlog.com/ja/) が参考になります。",
-        "このバグについては、このページ [Backlog](https://backlog.com/ja/) が参考になります。",
 	);
+    my @expected = (
+        "このバグについては、このページ https://backlog.com/ja/ が参考になります。",
+        "このバグについては、このページ [[Backlog>https://backlog.com/ja/]] が参考になります。",
+    );
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
