@@ -79,9 +79,7 @@ sub delete_empty_line {
 
 sub link2link {
     my $input = shift;
-    if ($input =~ /(.*)\[(.*?)\]\((.*?)\)(.*)/) {
-        return "$1\[\[$2>$3\]\]$4\n";
-    }
+    $input =~ s/(.*)\[(.*?)\]\((.*?)\)(.*)/\1\[\[\2>\3\]\]\4/;
     return $input;
 }
 
