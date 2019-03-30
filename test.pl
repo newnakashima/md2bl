@@ -1,3 +1,5 @@
+package Test;
+
 use strict;
 use lib '.';
 use md2bl;
@@ -119,10 +121,21 @@ sub test_link2link {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
-test_indent2minus();
-test_numbered_list();
-test_ast2sqt();
-test_hash2ast();
-test_delete_empty_line();
-test_link2link();
+sub test_bold {
+    my @inputs = (
+        "これは**太字**です。"
+    );
+    my @expected = (
+        "これは''太字''です。"
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
+# test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
+foreach my $entry ( keys %Test:: ) {
+    no strict 'refs';
+    if (defined &{"Test::$entry"} && $entry =~ /^test_/) {
+        &{"Test::$entry"}();
+    }
+}
 

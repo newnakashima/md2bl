@@ -32,6 +32,8 @@ sub md2bl {
     # リンク記法を変換
     $line = link2link($line);
 
+    $line = bold($line);
+
     return $line;
 }
 
@@ -77,9 +79,13 @@ sub delete_empty_line {
 
 sub link2link {
     my $input = shift;
-    if ($input =~ /(.*)\[(.*?)\]\((.*?)\)(.*)/) {
-        return "$1\[\[$2>$3\]\]$4";
-    }
+    $input =~ s/(.*)\[(.*?)\]\((.*?)\)(.*)/\1\[\[\2>\3\]\]\4/;
+    return $input;
+}
+
+sub bold {
+    my $input = shift;
+    $input =~ s/(\*\*)(.*)(\*\*)/''\2''/g;
     return $input;
 }
 
