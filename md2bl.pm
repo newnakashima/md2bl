@@ -14,6 +14,9 @@ sub get_eol {
 sub md2bl {
     my $line = shift;
 
+    # 番号付き箇条書きを変換
+    $line = numbered_list($line);
+
     # インデント（半角スペース4個）を変換
     $line = indent2minus($line);
 
@@ -35,6 +38,15 @@ sub md2bl {
 sub indent2minus {
     my $input = shift;
     $input =~ s/\s{4}/-/g;
+    return $input;
+}
+
+sub numbered_list {
+    my $input = shift;
+    $input =~ s/\d+\./+/;
+    if ($input =~ /^(\s{4})+\+/) {
+        $input =~ s/\s{4}/+/g;
+    }
     return $input;
 }
 

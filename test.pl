@@ -30,6 +30,26 @@ sub test_indent2minus {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_numbered_list {
+    my @inputs = (
+        "1. 番号リストレベル1",
+        "1. 番号リストレベル1",
+        "    1. 番号リストレベル2",
+        "        1. 番号リストレベル3",
+        "    1. 番号リストレベル2",
+        "2. 番号リストレベル1",
+    );
+    my @expected = (
+        "+ 番号リストレベル1",
+        "+ 番号リストレベル1",
+        "++ 番号リストレベル2",
+        "+++ 番号リストレベル3",
+        "++ 番号リストレベル2",
+        "+ 番号リストレベル1"
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
 sub test_ast2sqt {
     my @inputs = (
         "**太字記法**",
@@ -100,6 +120,7 @@ sub test_link2link {
 }
 
 test_indent2minus();
+test_numbered_list();
 test_ast2sqt();
 test_hash2ast();
 test_delete_empty_line();
