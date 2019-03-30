@@ -119,10 +119,21 @@ sub test_link2link {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_bold {
+    my @inputs = (
+        "これは**太字**です。"
+    );
+    my @expected = (
+        "これは''太字''です。"
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
 test_indent2minus();
 test_numbered_list();
 test_ast2sqt();
 test_hash2ast();
 test_delete_empty_line();
 test_link2link();
+test_bold();
 
