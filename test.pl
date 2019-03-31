@@ -54,16 +54,6 @@ sub test_numbered_list {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
-sub test_ast2sqt {
-    my @inputs = (
-        "**太字記法**",
-    );
-    my @expected = (
-        "''太字記法''",
-    );
-    exec_test((caller(0))[3], \@inputs, \@expected);
-}
-
 sub test_hash2ast {
     my @inputs = (
         "# 見出しレベル1",
@@ -136,11 +126,15 @@ sub test_bold {
 sub test_italic {
     my @inputs = (
         "これは*斜体文字*です。",
-        "これは_斜体文字_です。",
+        "これは_斜体文字_ではありません。",
+        "これは _斜体文字_ です。",
+        "_斜体文字_ です。",
     );
     my @expected = (
         "これは'''斜体文字'''です。",
+        "これは_斜体文字_ではありません。",
         "これは'''斜体文字'''です。",
+        "'''斜体文字'''です。",
     );
     exec_test((caller(0))[3], \@inputs, \@expected);
 }

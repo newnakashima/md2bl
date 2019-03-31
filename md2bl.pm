@@ -20,19 +20,20 @@ sub md2bl {
     # インデント（半角スペース4個）を変換
     $line = indent2minus($line);
 
-    # 太字の記法を変換
-    $line = ast2sqt($line);
-
-    # 見出しの記法を変換
-    $line = hash2ast($line);
-
     # 空白行を詰める
     $line = delete_empty_line($line);
 
     # リンク記法を変換
     $line = link2link($line);
 
+    # 太字記法を変換
     $line = bold($line);
+
+    # イタリックを変換
+    $line = italic($line);
+
+    # 見出しの記法を変換。*を変換したあとに行う
+    $line = hash2ast($line);
 
     return $line;
 }
@@ -49,12 +50,6 @@ sub numbered_list {
     if ($input =~ /^(\s{4})+\+/) {
         $input =~ s/\s{4}/+/g;
     }
-    return $input;
-}
-
-sub ast2sqt {
-    my $input = shift;
-    $input =~ s/\*\*(.*)\*\*/''\1''/g;
     return $input;
 }
 
@@ -85,7 +80,14 @@ sub link2link {
 
 sub bold {
     my $input = shift;
-    $input =~ s/(\*\*)(.*)(\*\*)/''\2''/g;
+    $input =~ s/(\*\*)([^\*]*?)(\*\*)/''\2''/g;
+    return $input;
+}
+
+sub italic {
+    my $input = shift;
+    $input =~ s/\*([^\*]*?)\*/'''\1'''/g;
+    $input =~ s/(^|\s)_([^_]*?)_\s/'''\2'''/g;
     return $input;
 }
 
