@@ -35,6 +35,9 @@ sub md2bl {
     # 見出しの記法を変換。*を変換したあとに行う
     $line = hash2ast($line);
 
+    # 打ち消し線を変換
+    $line = strikethrough($line);
+
     return $line;
 }
 
@@ -88,6 +91,12 @@ sub italic {
     my $input = shift;
     $input =~ s/\*([^\*]*?)\*/'''\1'''/g;
     $input =~ s/(^|\s)_([^_]*?)_\s/'''\2'''/g;
+    return $input;
+}
+
+sub strikethrough {
+    my $input = shift;
+    $input =~ s/~~([^~]*?)~~/%%\1%%/g;
     return $input;
 }
 

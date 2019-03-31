@@ -17,7 +17,7 @@ sub exec_test {
             $has_error = 1;
         }
     }
-    print("$test_name succeeded!\n");
+    print(".");
 }
 
 sub test_indent2minus {
@@ -98,7 +98,7 @@ sub test_delete_empty_line {
             }
         }
     }
-    print("$test_name succeeded!\n");
+    print(".");
 }
 
 sub test_link2link {
@@ -139,6 +139,16 @@ sub test_italic {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_strikethrough {
+    my @inputs = (
+        "これは~~打ち消し線~~です。",
+    );
+    my @expected = (
+        "これは%%打ち消し線%%です。",
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
@@ -147,7 +157,11 @@ foreach my $entry ( keys %Test:: ) {
     }
 }
 
+print("\n");
+
 if ($has_error) {
     exit(1);
 }
+
+print("All tests are OK!!\n");
 
