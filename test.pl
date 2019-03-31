@@ -139,6 +139,16 @@ sub test_italic {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_strikethrough {
+    my @inputs = (
+        "これは~~打ち消し線~~です。",
+    );
+    my @expected = (
+        "これは%%打ち消し線%%です。",
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
