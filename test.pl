@@ -4,15 +4,17 @@ use strict;
 use lib '.';
 use md2bl;
 
+our $has_error = 0;
+
 sub exec_test {
     my ($test_name, $inputs, $expected) = @_;
     for (my $i = 0; $i < @$inputs; $i++) {
         my $actual = md2bl::md2bl($inputs->[$i]);
         if ($actual ne $expected->[$i]) {
-            print("$test_name failed.\n");
-            print("actual: $actual\n");
-            print("expected: $expected->[$i]\n");
-            exit(1);
+            print("\e[1m\e[31m$test_name failed.\n\e[m");
+            print("\e[31mactual: $actual\n");
+            print("expected: $expected->[$i]\n\e[m");
+            $has_error = 1;
         }
     }
     print("$test_name succeeded!\n");
@@ -48,16 +50,6 @@ sub test_numbered_list {
         "+++ 番号リストレベル3",
         "++ 番号リストレベル2",
         "+ 番号リストレベル1"
-    );
-    exec_test((caller(0))[3], \@inputs, \@expected);
-}
-
-sub test_ast2sqt {
-    my @inputs = (
-        "**太字記法**",
-    );
-    my @expected = (
-        "''太字記法''",
     );
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
@@ -131,11 +123,31 @@ sub test_bold {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_italic {
+    my @inputs = (
+        "これは*斜体文字*です。",
+        "これは_斜体文字_ではありません。",
+        "これは _斜体文字_ です。",
+        "_斜体文字_ です。",
+    );
+    my @expected = (
+        "これは'''斜体文字'''です。",
+        "これは_斜体文字_ではありません。",
+        "これは'''斜体文字'''です。",
+        "'''斜体文字'''です。",
+    );
+    exec_test((caller(0))[3], \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
     if (defined &{"Test::$entry"} && $entry =~ /^test_/) {
         &{"Test::$entry"}();
     }
+}
+
+if ($has_error) {
+    exit(1);
 }
 
