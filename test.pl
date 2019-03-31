@@ -17,7 +17,7 @@ sub exec_test {
             $has_error = 1;
         }
     }
-    print("$test_name succeeded!\n");
+    print(".");
 }
 
 sub test_indent2minus {
@@ -98,7 +98,7 @@ sub test_delete_empty_line {
             }
         }
     }
-    print("$test_name succeeded!\n");
+    print(".");
 }
 
 sub test_link2link {
@@ -157,7 +157,11 @@ foreach my $entry ( keys %Test:: ) {
     }
 }
 
+print("\n");
+
 if ($has_error) {
     exit(1);
 }
+
+print("All tests are OK!!\n");
 
