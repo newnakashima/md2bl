@@ -6,6 +6,10 @@ use md2bl;
 
 our $has_error = 0;
 
+sub succeed {
+    print(".");
+}
+
 sub fail {
     my ($test_name, $actual, $expected) = @_;
     print("\e[1m\e[31m$test_name failed.\n\e[m");
@@ -22,7 +26,7 @@ sub exec_test {
             fail($test_name, $actual, $expected->[$i]);
         }
     }
-    print(".");
+    succeed();
 }
 
 sub exec_test_refarray {
@@ -42,7 +46,7 @@ sub exec_test_refarray {
             }
         }
     }
-    print(".");
+    succeed();
 }
 
 sub test_indent2minus {
@@ -188,5 +192,5 @@ if ($has_error) {
     exit(1);
 }
 
-print("All tests are OK!!\n");
+print("\e[42m\e[37m\e[1mAll tests are OK!!\e[m\n");
 
