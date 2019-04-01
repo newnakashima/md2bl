@@ -3,6 +3,8 @@ package md2bl;
 use strict;
 use Exporter 'import';
 
+our $table_mode = 0;
+
 sub get_eol {
     my $EOL = '\n';
     if ($^O eq 'msys') {
@@ -13,6 +15,22 @@ sub get_eol {
 
 sub md2bl {
     my $line = shift;
+
+    # テーブル記法開始後でボーダーの場合は行を消す
+    if ($table_mode && check_border($line)) {
+        return;
+    } 
+
+    # テーブル記法が始まっているかどうかチェック
+    if (!$table_mode && check_table($line)) {
+        # ヘッダ行の印をつける
+        $line = replace_table($line);
+        $table_mode = 1;
+    }
+
+    if ($table_mode && check_table_end($line)) {
+        $table_mode = 0;
+    }
 
     # 番号付き箇条書きを変換
     $line = numbered_list($line);
@@ -98,6 +116,27 @@ sub strikethrough {
     my $input = shift;
     $input =~ s/~~([^~]*?)~~/%%\1%%/g;
     return $input;
+}
+
+sub check_table {
+    my $input = shift;
+    return $input =~ /^\|.*\|/;
+}
+
+sub replace_table {
+    my $input = shift;
+    $input =~ s/^(\|.*\|)$/\1h/;
+    return $input;
+}
+
+sub check_border {
+    my $input = shift;
+    return $input =~ /.*---.*/;
+}
+
+sub check_table_end {
+    my $input = shift;
+    return $input =~ /^[^|]/;
 }
 
 1;
