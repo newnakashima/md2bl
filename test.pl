@@ -6,18 +6,47 @@ use md2bl;
 
 our $has_error = 0;
 
+sub succeed {
+    print(".");
+}
+
+sub fail {
+    my ($test_name, $actual, $expected) = @_;
+    print("\e[1m\e[31m$test_name failed.\n\e[m");
+    print("\e[31mactual: $actual\n");
+    print("expected: $expected\n\e[m");
+    $has_error = 1;
+}
+
 sub exec_test {
     my ($test_name, $inputs, $expected) = @_;
     for (my $i = 0; $i < @$inputs; $i++) {
         my $actual = md2bl::md2bl($inputs->[$i]);
         if ($actual ne $expected->[$i]) {
-            print("\e[1m\e[31m$test_name failed.\n\e[m");
-            print("\e[31mactual: $actual\n");
-            print("expected: $expected->[$i]\n\e[m");
-            $has_error = 1;
+            fail($test_name, $actual, $expected->[$i]);
         }
     }
-    print(".");
+    succeed();
+}
+
+sub exec_test_refarray {
+    my ($test_name, $inputs, $expected) = @_;
+    for (my $i = 0; $i < scalar(@$inputs); $i++) {
+        my @actuals = ();
+        foreach my $item (@{$inputs->[$i]}) {
+            my $result = md2bl::md2bl($item);
+            if ($result eq "") {
+                next;
+            }
+            push(@actuals, $result);
+        }
+        for (my $j = 0; $j < scalar(@{$expected->[$i]}); $j++) {
+            if ($actuals[$j] ne $expected->[$i]->[$j]) {
+                fail($test_name, $actuals[$j], $expected->[$i]->[$j]);
+            }
+        }
+    }
+    succeed();
 }
 
 sub test_indent2minus {
@@ -80,25 +109,7 @@ sub test_delete_empty_line {
         ["hoge\n", "hoge\n"],
         ["hoge\n", "hoge\n"],
     ];
-    for (my $i = 0; $i < scalar(@$inputs); $i++) {
-        my @actual = ();
-        foreach my $item (@{$inputs->[$i]}) {
-            my $result = md2bl::md2bl($item);
-            if ($result eq "") {
-                next;
-            }
-            push(@actual, md2bl::md2bl($item));
-        }
-        for (my $j = 0; $j < scalar(@$expected); $j++) {
-            if (@actual[$j] ne $expected->[$i]->[$j]) {
-                print("$test_name failed.\n");
-                print("actual: " . @actual[$j] . "\n");
-                print("expected: " . $expected->[$i]->[$j] . "\n");
-                exit(1);
-            }
-        }
-    }
-    print(".");
+    exec_test_refarray($test_name, $inputs, $expected);
 }
 
 sub test_link2link {
@@ -149,6 +160,24 @@ sub test_strikethrough {
     exec_test((caller(0))[3], \@inputs, \@expected);
 }
 
+sub test_table {
+    my $test_name = (caller(0))[3];
+    my $inputs = [
+        [
+            "| header1 | header2 |",
+            "| --- | --- |",
+            "| data1 | data2 |",
+        ],
+    ];
+    my $expected = [
+        [
+            "| header1 | header2 |h",
+            "| data1 | data2 |",
+        ],
+    ];
+    exec_test_refarray($test_name, $inputs, $expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
@@ -163,5 +192,5 @@ if ($has_error) {
     exit(1);
 }
 
-print("All tests are OK!!\n");
+print("\e[42m\e[37m\e[1mAll tests are OK!!\e[m\n");
 
