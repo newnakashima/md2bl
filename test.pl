@@ -25,6 +25,26 @@ sub exec_test {
     print(".");
 }
 
+sub exec_test_refarray {
+    my ($test_name, $inputs, $expected) = @_;
+    for (my $i = 0; $i < scalar(@$inputs); $i++) {
+        my @actuals = ();
+        foreach my $item (@{$inputs->[$i]}) {
+            my $result = md2bl::md2bl($item);
+            if ($result eq "") {
+                next;
+            }
+            push(@actuals, $result);
+        }
+        for (my $j = 0; $j < scalar(@{$expected->[$i]}); $j++) {
+            if ($actuals[$j] ne $expected->[$i]->[$j]) {
+                fail($test_name, $actuals[$j], $expected->[$i]->[$j]);
+            }
+        }
+    }
+    print(".");
+}
+
 sub test_indent2minus {
     my @inputs = (
         "- リストレベル1",
@@ -85,22 +105,7 @@ sub test_delete_empty_line {
         ["hoge\n", "hoge\n"],
         ["hoge\n", "hoge\n"],
     ];
-    for (my $i = 0; $i < scalar(@$inputs); $i++) {
-        my @actual = ();
-        foreach my $item (@{$inputs->[$i]}) {
-            my $result = md2bl::md2bl($item);
-            if ($result eq "") {
-                next;
-            }
-            push(@actual, $result);
-        }
-        for (my $j = 0; $j < scalar(@{$expected->[$i]}); $j++) {
-            if (@actual[$j] ne $expected->[$i]->[$j]) {
-                fail($test_name, $actual[$j], $expected->[$i]->[$j]);
-            }
-        }
-    }
-    print(".");
+    exec_test_refarray($test_name, $inputs, $expected);
 }
 
 sub test_link2link {
@@ -166,22 +171,7 @@ sub test_table {
             "| data1 | data2 |",
         ],
     ];
-    for (my $i = 0; $i < scalar(@$inputs); $i++) {
-        my @actuals = ();
-        foreach my $item ($inputs->[$i]) {
-            my $result = md2bl::md2bl(@$item);
-            if ($result eq "") {
-                next;
-            }
-            push(@actuals, $result);
-        }
-        for (my $j = 0; $j < scalar(@{$expected->[$i]}); $j++) {
-            if ($actuals[$j] ne $expected->[$i]->[$j]) {
-                fail($test_name, $actuals[$j], $expected->[$i]->[$j]);
-            }
-        }
-    }
-    print(".");
+    exec_test_refarray($test_name, $inputs, $expected);
 }
 
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
