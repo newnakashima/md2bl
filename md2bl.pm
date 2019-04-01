@@ -139,4 +139,9 @@ sub check_table_end {
     return $input =~ /^[^|]/;
 }
 
+sub check_code {}
+sub replace_code_lang {}
+sub replace_code {}
+sub chkce_code_end {}
+
 1;
