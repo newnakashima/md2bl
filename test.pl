@@ -178,6 +178,49 @@ sub test_table {
     exec_test_refarray($test_name, $inputs, $expected);
 }
 
+sub test_code {
+    my $test_name = (caller(0))[3];
+    my $inputs = [
+        [
+            "```java",
+            "    package helloworld;",
+            "    public class Hello {",
+            "        public String sayHello {",
+            "            return \"Hello\";",
+            "        }",
+            "    }",
+            "```"
+        ],
+        [
+            "```",
+            "    const hoge = 100;",
+            "    const fuga = hoge * 2",
+            "    console.log(`fuga is \$\{fuga\}.`)",
+            "```",
+        ],
+    ];
+    my $expected = [
+        [
+            "{code:java}",
+            "    package helloworld;",
+            "    public class Hello {",
+            "        public String sayHello {",
+            "            return \"Hello\";",
+            "        }",
+            "    }",
+            "{/code}",
+        ],
+        [
+            "{code}",
+            "    const hoge = 100;",
+            "    const fuga = hoge * 2",
+            "    console.log(`fuga is \$\{fuga\}.`)",
+            "{/code}",
+        ],
+    ];
+    exec_test_refarray($test_name, $inputs, $expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';

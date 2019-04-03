@@ -32,3 +32,21 @@ _斜体_ です。
 |---|---|---|
 |これは|テーブル|です|
 
+Javaのコードブロックです。
+
+```java
+    package helloworld;
+    public class Hello {
+        public String sayHello {
+            return "Hello";
+        }
+    }
+```
+
+普通のコードブロックです。
+
+```
+    const hoge = 100;
+    const fuga = hoge * 2;
+    console.log(`fuga is ${fuga}.`);
+```
