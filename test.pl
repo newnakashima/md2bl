@@ -221,6 +221,17 @@ sub test_code {
     exec_test_refarray($test_name, $inputs, $expected);
 }
 
+sub test_index {
+    my $test_name = (caller(0))[3];
+    my @inputs = (
+        '[toc]',
+    );
+    my @expected = (
+        '#contents',
+    );
+    exec_test($test_name, \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';

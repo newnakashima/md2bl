@@ -71,6 +71,9 @@ sub md2bl {
     # 打ち消し線を変換
     $line = strikethrough($line);
 
+    # 目次を置換
+    $line = replace_index($line);
+
     return $line;
 }
 
@@ -169,6 +172,12 @@ sub replace_code_lang {
 sub replace_code_end {
     my $input = shift;
     $input =~ s/```/{\/code}/;
+    return $input;
+}
+
+sub replace_index {
+    my $input = shift;
+    $input =~ s/\[toc\]/#contents/;
     return $input;
 }
 
