@@ -232,6 +232,17 @@ sub test_index {
     exec_test($test_name, \@inputs, \@expected);
 }
 
+sub test_br {
+    my $test_name = (caller(0))[3];
+    my @inputs = (
+        'aaa<br>bbb',
+    );
+    my @expected = (
+        'aaa&br;bbb',
+    );
+    exec_test($test_name, \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
