@@ -35,6 +35,7 @@ $ ./md2bl example.md
 これは%%打ち消し線%%です。
 | header1 | header2 | header3 |h
 |これは|テーブル|です|
+Javaのコードブロックです。
 {code:java}
     package helloworld;
     public class Hello {
