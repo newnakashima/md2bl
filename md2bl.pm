@@ -4,6 +4,7 @@ use strict;
 use Exporter 'import';
 
 our $table_mode = 0;
+our $code_mode = 0;
 
 sub get_eol {
     my $EOL = '\n';
@@ -15,6 +16,20 @@ sub get_eol {
 
 sub md2bl {
     my $line = shift;
+
+    # コード行かどうかチェック
+    if (check_code($line)) {
+        $code_mode = !$code_mode;
+        if ($code_mode) {
+            $line = replace_code_lang($line);
+        } else {
+            $line = replace_code_end($line);
+        }
+    }
+
+    if ($code_mode) {
+        return $line;
+    }
 
     # テーブル記法開始後でボーダーの場合は行を消す
     if ($table_mode && check_border($line)) {
@@ -139,9 +154,21 @@ sub check_table_end {
     return $input =~ /^[^|]/;
 }
 
-sub check_code {}
-sub replace_code_lang {}
-sub replace_code {}
-sub chkce_code_end {}
+sub check_code {
+    my $input = shift;
+    return $input =~ /```/;
+}
+
+sub replace_code_lang {
+    my $input = shift;
+    $input =~ s/```(.*)$/{code:\1}/;
+    $input =~ s/{code:}/{code}/;
+    return $input;
+}
+sub replace_code_end {
+    my $input = shift;
+    $input =~ s/```/{\/code}/;
+    return $input;
+}
 
 1;

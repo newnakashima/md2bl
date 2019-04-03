@@ -35,5 +35,19 @@ $ ./md2bl example.md
 これは%%打ち消し線%%です。
 | header1 | header2 | header3 |h
 |これは|テーブル|です|
+{code:java}
+    package helloworld;
+    public class Hello {
+        public String sayHello {
+            return "Hello";
+        }
+    }
+{/code}
+普通のコードブロックです。
+{code}
+    const hoge = 100;
+    const fuga = hoge * 2;
+    console.log(`fuga is ${fuga}.`);
+{/code}
 ```
 
