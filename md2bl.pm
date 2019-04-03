@@ -74,6 +74,9 @@ sub md2bl {
     # 目次を置換
     $line = replace_index($line);
 
+    # 改行を置換
+    $line = replace_br($line);
+
     return $line;
 }
 
@@ -178,6 +181,12 @@ sub replace_code_end {
 sub replace_index {
     my $input = shift;
     $input =~ s/\[toc\]/#contents/;
+    return $input;
+}
+
+sub replace_br {
+    my $input = shift;
+    $input =~ s/<br>/&br;/g;
     return $input;
 }
 

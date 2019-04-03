@@ -52,3 +52,6 @@ Javaのコードブロックです。
     const fuga = hoge * 2;
     console.log(`fuga is ${fuga}.`);
 ```
+
+この文章は途中で<br>改行<br>します。
+
