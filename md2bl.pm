@@ -87,8 +87,12 @@ sub md2bl {
 
 sub indent2minus {
     my $input = shift;
-    $input =~ s/\s{4}/-/g;
-    return $input;
+    if ($input =~ /^\s{4}/) {
+        $input =~ s/\s{4}/-/g;
+        return indent2minus($input);
+    } else {
+        return $input;
+    }
 }
 
 sub numbered_list {
