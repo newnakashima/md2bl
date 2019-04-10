@@ -17,6 +17,11 @@ sub get_eol {
 sub md2bl {
     my $line = shift;
 
+    # 引用行かどうかチェック
+    if (check_quote($line)) {
+        return $line;
+    }
+
     # コード行かどうかチェック
     if (check_code($line)) {
         $code_mode = !$code_mode;
@@ -188,6 +193,11 @@ sub replace_br {
     my $input = shift;
     $input =~ s/<br>/&br;/g;
     return $input;
+}
+
+sub check_quote {
+    my $input = shift;
+    return $input =~ /^>+\s/;
 }
 
 1;

@@ -243,10 +243,23 @@ sub test_br {
     exec_test($test_name, \@inputs, \@expected);
 }
 
+sub test_quote {
+    my $test_name = (caller(0))[3];
+    my @inputs = (
+        '> 引用文の中では **強調** なども無効になります。',
+    );
+    my @expected = (
+        '> 引用文の中では **強調** なども無効になります。',
+    );
+    exec_test($test_name, \@inputs, \@expected);
+}
+
 # test_.+ 形式の名前を持つ関数を動的に実行する。順不同。
+my $test_count = 0;
 foreach my $entry ( keys %Test:: ) {
     no strict 'refs';
     if (defined &{"Test::$entry"} && $entry =~ /^test_/) {
+        $test_count++;
         &{"Test::$entry"}();
     }
 }
@@ -257,5 +270,5 @@ if ($has_error) {
     exit(1);
 }
 
-print("\e[42m\e[37m\e[1mAll tests are OK!!\e[m\n");
+print("\e[42m\e[37m\e[1mAll ${test_count} tests are OK!!\e[m\n");
 
