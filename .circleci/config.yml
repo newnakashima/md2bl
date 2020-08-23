@@ -5,7 +5,7 @@ jobs:
       - image: debian:stretch
 
     steps:
-      - run: apt-get update -y && apt-get install openssh-client git
+      - run: apt-get update -y && apt-get install -y openssh-client git
       - checkout
 
       - run:
