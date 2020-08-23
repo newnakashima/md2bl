@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: debian:stretch
+      - run: apt-get update -y && apt-get install openssh-client git
 
     steps:
       - checkout
@@ -10,5 +11,4 @@ jobs:
       - run:
           name: Test
           command: perl test.pl
-      - run: apt-get update -y && apt-get install openssh-client git
 
