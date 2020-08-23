@@ -3,9 +3,9 @@ jobs:
   build:
     docker:
       - image: debian:stretch
-      - run: apt-get update -y && apt-get install openssh-client git
 
     steps:
+      - run: apt-get update -y && apt-get install openssh-client git
       - checkout
 
       - run:
