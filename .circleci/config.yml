@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/base:2020.01
+      - image: debian:stretch
 
     steps:
       - checkout
@@ -10,4 +10,5 @@ jobs:
       - run:
           name: Test
           command: perl test.pl
+      - run: apt-get update -y && apt-get install openssh-client git
 
